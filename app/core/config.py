@@ -1,10 +1,21 @@
-from pydantic import BaseSettings
+from typing import List, Union
+from pydantic import BaseSettings, AnyHttpUrl, validator
 
 
 class Settings(BaseSettings):
     # app
-    app_name: str = "Awesome API"
-    items_per_user: int = 50
+    APP_NAME: str = "teamatch-backend"
+    API_V1_STR: str = "/api/v1"
+    test_int: int = 50
+    BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = []
+
+    @validator("BACKEND_CORS_ORIGINS", pre=True)
+    def assemble_cors_origins(cls, v: Union[str, List[str]]) -> Union[List[str], str]:
+        if isinstance(v, str) and not v.startswith("["):
+            return [i.strip() for i in v.split(",")]
+        elif isinstance(v, (list, str)):
+            return v
+        raise ValueError(v)
 
     # database
     DATABASE_PORT: int
@@ -14,12 +25,18 @@ class Settings(BaseSettings):
     POSTGRES_HOST: str
     POSTGRES_HOSTNAME: str
 
+    ADMIN_EMAIL: str
+    ADMIN_NAME: str
+    ADMIN_PASSWORD: str
+
     # auth
     JWT_PUBLIC_KEY: str
     JWT_PRIVATE_KEY: str
-    REFRESH_TOKEN_EXPIRES_IN: int
-    ACCESS_TOKEN_EXPIRES_IN: int
+    ACCESS_TOKEN_EXPIRE_MINUTES: int
+    REFRESH_TOKEN_EXPIRE_MINUTES: int
     JWT_ALGORITHM: str
+
+    SECRET_KEY: str
 
     # origin
     CLIENT_ORIGIN: str

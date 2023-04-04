@@ -43,3 +43,8 @@ class User(UserInDBBase):
 # Additional properties stored in DB
 class UserInDB(UserInDBBase):
     hashed_password: str
+
+class UserGetBase(BaseModel):
+    email: Optional[EmailStr] = None
+    class Config:
+        orm_mode = True

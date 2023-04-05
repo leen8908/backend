@@ -35,6 +35,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int
     REFRESH_TOKEN_EXPIRE_MINUTES: int
     JWT_ALGORITHM: str
+    SESSION_DURATION: str
 
     SECRET_KEY: str
 

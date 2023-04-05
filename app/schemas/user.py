@@ -14,12 +14,17 @@ class UserBase(BaseModel):
     is_admin: bool = False
     name: Optional[str] = "--"
 
+class UserUpdateNoEmail(BaseModel):
+    name: Optional[str] = "--"
+    line_id: Optional[str] = None
+    image: Optional[str] = None
 
 # Properties to receive via API on creation
 class UserCreate(UserBase):
-    password: str
+    password: str = None
     line_id: Optional[str] = None
     image: Optional[str] = None
+    is_google_sso: Optional[bool] = False
 
 
 # Properties to receive via API on update
@@ -48,3 +53,7 @@ class UserGetBase(BaseModel):
     email: Optional[EmailStr] = None
     class Config:
         orm_mode = True
+
+class UserMessage(BaseModel):
+    message:str
+    data: Optional[User] = None

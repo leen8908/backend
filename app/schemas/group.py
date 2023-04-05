@@ -3,7 +3,7 @@ BaseModel.schema will return a dict of the schema
 while BaseModel.schema_json will return a JSON string representation of that dict.
 """
 from uuid import UUID
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 from pydantic import BaseModel
 
@@ -19,7 +19,7 @@ class GroupCreate(GroupBase):
     name: str
     group_id: str
     room_uuid: UUID
-    created_time: datetime  # .now()
+    created_time: datetime = None
 
 # Properties to receive via API on update
 
@@ -32,7 +32,7 @@ class GroupInDBBase(GroupBase):
     name: str
     group_id: str
     room_uuid: UUID
-    created_time: datetime  # .now()
+    created_time: datetime = None
 
     class Config:
         orm_mode = True
@@ -46,3 +46,8 @@ class Group(GroupInDBBase):
 # Additional properties stored in DB
 class GroupInDB(GroupInDBBase):
     pass
+
+
+class GroupWithMessage(BaseModel):
+    message: str
+    data: Optional[List[Group]] = None

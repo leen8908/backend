@@ -3,7 +3,7 @@ BaseModel.schema will return a dict of the schema
 while BaseModel.schema_json will return a JSON string representation of that dict.
 """
 from uuid import UUID
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 from pydantic import BaseModel
 
@@ -22,7 +22,7 @@ class MatchingRoomCreate(MatchingRoomBase):
     min_member_num: int
     description: Optional[str] = None
     is_forced_matching: bool = False
-    created_time: datetime  # .now()
+    created_time: datetime = None
 
 # Properties to receive via API on update
 
@@ -38,7 +38,7 @@ class MatchingRoomInDBBase(MatchingRoomBase):
     min_member_num: int
     description: Optional[str] = None
     is_forced_matching: bool = False
-    created_time: datetime
+    created_time: datetime = None
 
     class Config:
         orm_mode = True
@@ -53,3 +53,8 @@ class MatchingRoom(MatchingRoomInDBBase):
 class MatchingRoomInDB(MatchingRoomInDBBase):
     is_closed: bool = False
     finish_time: datetime
+
+
+class MatchingRoomWithMessage(BaseModel):
+    message: str
+    data: Optional[List[MatchingRoom]] = None

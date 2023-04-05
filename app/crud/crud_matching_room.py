@@ -18,21 +18,13 @@ class CRUDMatchingRoom(CRUDBase[MatchingRoom, MatchingRoomCreate, MatchingRoomUp
     def get_by_room_id(self, db: Session, *, room_id: str) -> Optional[MatchingRoom]:
         return db.query(MatchingRoom).filter(MatchingRoom.room_id == room_id).first()
 
-    def search_with_user_and_name(self, db: Session, *, user_email: str = "", name: str = "") -> Optional[List[MatchingRoom]]:
+    def search_with_user_and_name(self, db: Session, *, user_uuid: UUID = None, name: str = "") -> Optional[List[MatchingRoom]]:
         matching_rooms = db.query(MatchingRoom)
         # filter out matching rooms for user first
-        if (user_email != ""):
-            user = db.query(User).filter(User.email == user_email).first()
-            # TODO: ??? 在這一層就直接return {'message': , 'data': } ???
-            print('user >>> ', user)
-            if user is None:
-                return []  # "Error: fail to find user with prompted email."
-            else:
-                print('User is not None!!!')
-                mr_members = db.query(MR_Member).filter(
-                    MR_Member.user_uuid == user.user_uuid)
-                matching_rooms = matching_rooms.filter(
-                    MatchingRoom.room_uuid.in_([x.room_uuid for x in mr_members]))
+        if (user_uuid):
+            mr_members = db.query(MR_Member).filter(MR_Member.user_uuid == user_uuid)
+            matching_rooms = matching_rooms.filter(
+                MatchingRoom.room_uuid.in_([x.room_uuid for x in mr_members]))
         if (name != ""):
             matching_rooms = matching_rooms.filter(
                 MatchingRoom.name.ilike("%{}%".format(name)))

@@ -12,7 +12,7 @@ from app.core.config import settings
 router = APIRouter()
 
 
-@router.post("/my-list", response_model={})  # List[schemas.MatchingRoom])
+@router.post("/my-list", response_model=schemas.MatchingRoomWithMessage)
 def read_my_matching_rooms(
     db: Session = Depends(deps.get_db),
     user_email: str = ""  # ,
@@ -21,8 +21,20 @@ def read_my_matching_rooms(
     """
     Retrieve user's matching rooms.
     """
+    #  先看user_email是否找得到user再去query matching room
+    if (user_email == ''):
+        raise HTTPException(
+            status_code=400,
+            detail="Fail to retrieve user's matching room. Missing parameter: user_email."
+        )
+    user = crud.user.get_by_email(db=db, email=user_email)
+    if not user:
+        raise HTTPException(
+            status_code=400,
+            detail="Fail to find user with this email.",
+        )
     matching_rooms = crud.matching_room.search_with_user_and_name(
-        db=db, user_email=user_email)
+        db=db, user_uuid=user.user_uuid)
     return {'message': 'success', 'data': matching_rooms}
 
 

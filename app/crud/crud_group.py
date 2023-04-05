@@ -18,21 +18,14 @@ class CRUDGroup(CRUDBase[Group, GroupCreate, GroupUpdate]):
     def get_by_group_id(self, db: Session, *, group_id: str) -> Optional[Group]:
         return db.query(Group).filter(Group.group_id == group_id).first()
 
-    def search_with_user_and_name(self, db: Session, *, user_email: str = "", name: str = "") -> Optional[List[Group]]:
+    def search_with_user_and_name(self, db: Session, *, user_uuid: UUID = None, name: str = "") -> Optional[List[Group]]:
         groups = db.query(Group)
         # filter out matching rooms for user first
-        if (user_email != ""):
-            user = db.query(User).filter(User.email == user_email).first()
-            # TODO: ??? 在這一層就直接return {'message': , 'data': } ???
-            print('user >>> ', user)
-            if user is None:
-                return []  # "Error: fail to find user with prompted email."
-            else:
-                print('User is not None!!!')
-                gr_members = db.query(GR_Member).filter(
-                    GR_Member.user_uuid == user.user_uuid)
-                groups = groups.filter(
-                    Group.group_uuid.in_([x.group_uuid for x in gr_members]))
+        if (user_uuid):
+            gr_members = db.query(GR_Member).filter(
+                GR_Member.user_uuid == user_uuid)
+            groups = groups.filter(
+                Group.group_uuid.in_([x.group_uuid for x in gr_members]))
         if (name != ""):
             groups = groups.filter(
                 Group.name.ilike("%{}%".format(name)))

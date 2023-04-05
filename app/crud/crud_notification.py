@@ -6,12 +6,12 @@ from sqlalchemy.dialects.postgresql import UUID
 from app.crud.base import CRUDBase
 from app.models.notification import Notification
 from app.models.notification_template import NotificationTemplate
-from app.schemas.notification import NotificationCreate, NotificationUpdate
+from app.schemas.notification import NotificationCreate, NotificationUpdate, NotificationViewModel
 
 
 class CRUDNotification(CRUDBase[Notification, NotificationCreate, NotificationUpdate]):
-    def get_by_sender_uuid(self, db: Session, *, sender_uuid: UUID) -> Optional[List[str]]:
-        notification_text_list = []
+    def get_by_sender_uuid(self, db: Session, *, sender_uuid: UUID) -> Optional[List[NotificationViewModel]]:
+        notification_viewmodel_list = []
         notifications = db.query(Notification).filter(
             Notification.sender_uuid == sender_uuid).all()
         for notification in notifications:
@@ -20,11 +20,16 @@ class CRUDNotification(CRUDBase[Notification, NotificationCreate, NotificationUp
             # loop to replace
             for idx, f in enumerate(notification.f_string.split(';')):
                 notification_text = notification_text.replace('{'+str(idx)+'}', f)
-            notification_text_list.append(notification_text)
-        return notification_text_list
+            # create a viewmodel and stored needed value
+            notifiactionViewModel = NotificationViewModel()
+            notifiactionViewModel.receiver_uuid = notification.receiver_uuid
+            notifiactionViewModel.send_time = notification.send_time
+            NotificationViewModel.content = notification_text
+            notification_viewmodel_list.append(notifiactionViewModel)
+        return notification_viewmodel_list
 
-    def get_by_receiver_uuid(self, db: Session, *, receiver_uuid: UUID) -> Optional[List[str]]:
-        notification_text_list = []
+    def get_by_receiver_uuid(self, db: Session, *, receiver_uuid: UUID) -> Optional[List[NotificationViewModel]]:
+        notification_viewmodel_list = []
         notifications = db.query(Notification).filter(
             Notification.receiver_uuid == receiver_uuid).all()
         for notification in notifications:
@@ -33,8 +38,15 @@ class CRUDNotification(CRUDBase[Notification, NotificationCreate, NotificationUp
             # loop to replace
             for idx, f in enumerate(notification.f_string.split(';')):
                 notification_text = notification_text.replace('{'+str(idx)+'}', f)
-            notification_text_list.append(notification_text)
-        return notification_text_list
+            # create a viewmodel and stored needed value
+            notifiactionViewModel = NotificationViewModel(
+                receiver_uuid=notification.receiver_uuid, send_time=notification.send_time, content=notification_text)
+            notification_viewmodel_list.append(notifiactionViewModel)
+        for n in notification_viewmodel_list:
+            print('type >>>', type(n))
+            print(n)
+            print(n.content)
+        return notification_viewmodel_list
 
     # TODO: unfinished
     def create(self, db: Session, *, obj_in: NotificationCreate, from_MQ: bool) -> Notification:

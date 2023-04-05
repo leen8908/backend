@@ -58,3 +58,9 @@ class MatchingRoomInDB(MatchingRoomInDBBase):
 class MatchingRoomWithMessage(BaseModel):
     message: str
     data: Optional[List[MatchingRoom]] = None
+
+
+class MatchingRoomWithSearch(BaseModel):
+    user_email: str
+    prompt: str
+    query_all: bool

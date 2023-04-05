@@ -14,20 +14,20 @@ router = APIRouter()
 
 @router.post("/my-list", response_model=schemas.MatchingRoomWithMessage)
 def read_my_matching_rooms(
+    user_in: schemas.User,
     db: Session = Depends(deps.get_db),
-    user_email: str = ""  # ,
     # current_user: models.user = Depends(deps.get_current_active_superuser),
 ) -> Any:
     """
     Retrieve user's matching rooms.
     """
-    #  先看user_email是否找得到user再去query matching room
-    if (user_email == ''):
+    #  先看email是否找得到user再去query matching room
+    if (user_in.email == '' or user_in.email is None):
         raise HTTPException(
             status_code=400,
-            detail="Fail to retrieve user's matching room. Missing parameter: user_email."
+            detail="Fail to retrieve user's matching room. Missing parameter: email."
         )
-    user = crud.user.get_by_email(db=db, email=user_email)
+    user = crud.user.get_by_email(db=db, email=user_in.email)
     if not user:
         raise HTTPException(
             status_code=400,

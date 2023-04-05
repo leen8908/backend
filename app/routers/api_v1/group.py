@@ -14,20 +14,20 @@ router = APIRouter()
 
 @router.post("/my-list", response_model=schemas.GroupWithMessage)
 def read_my_groups(
-    db: Session = Depends(deps.get_db),
-    user_email: str = ""  # ,
+    user_in: schemas.User,
+    db: Session = Depends(deps.get_db)  # ,
     # current_user: models.user = Depends(deps.get_current_active_superuser),
 ) -> Any:
     """
     Retrieve user's groups.
     """
     #  先看user_email是否找得到user再去query group
-    if (user_email == ''):
+    if (user_in.email == '' or user_in.email is None):
         raise HTTPException(
             status_code=400,
-            detail="Fail to retrieve user's group. Missing parameter: user_email."
+            detail="Fail to retrieve user's group. Missing parameter: email."
         )
-    user = crud.user.get_by_email(db=db, email=user_email)
+    user = crud.user.get_by_email(db=db, email=user_in.email)
     if not user:
         raise HTTPException(
             status_code=400,

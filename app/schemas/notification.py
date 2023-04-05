@@ -50,6 +50,12 @@ class NotificationInDB(NotificationInDBBase):
     pass
 
 
+class NotificationViewModel(BaseModel):
+    receiver_uuid: UUID
+    send_time: datetime
+    content: str
+
+
 class NotificationTextWithMessage(BaseModel):
     message: str
-    data: Optional[List[str]] = None
+    data: Optional[List[NotificationViewModel]] = None

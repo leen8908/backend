@@ -51,3 +51,8 @@ class GroupInDB(GroupInDBBase):
 class GroupWithMessage(BaseModel):
     message: str
     data: Optional[List[Group]] = None
+
+
+class GroupWithSearch(BaseModel):
+    user_email: str
+    prompt: str

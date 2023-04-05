@@ -38,6 +38,10 @@ class Settings(BaseSettings):
 
     SECRET_KEY: str
 
+    GOOGLE_CLIENT_ID: str
+    GOOGLE_CLIENT_SECRET: str
+    GOOGLE_SECRET_KEY: str
+
     # origin
     CLIENT_ORIGIN: str
 

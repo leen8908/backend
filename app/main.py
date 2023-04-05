@@ -4,6 +4,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.utils import get_tw_time
 from app.core.config import settings
 from app.routers.api_v1.api import api_router
+#from app.routers.api_v1 import auth
+from starlette.responses import HTMLResponse
+from starlette.requests import Request
 
 app = FastAPI(title=settings.APP_NAME, openapi_url=f"{settings.API_V1_STR}/openapi.json)")
 
@@ -18,7 +21,7 @@ app.add_middleware(
 )
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
-
+#app.mount("/app/routers/api/v1/auth",auth.auth_app )
 
 @app.get("/api/healthchecker")
 def read_root():

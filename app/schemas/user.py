@@ -12,14 +12,14 @@ from pydantic import BaseModel, EmailStr
 class UserBase(BaseModel):
     email: Optional[EmailStr] = None
     is_admin: bool = False
-    name: Optional[str] = None
+    name: Optional[str] = "--"
 
 
 # Properties to receive via API on creation
 class UserCreate(UserBase):
     password: str
-    line_id: Optional[str]
-    image: Optional[str]
+    line_id: Optional[str] = None
+    image: Optional[str] = None
 
 
 # Properties to receive via API on update

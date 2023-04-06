@@ -51,6 +51,6 @@ class TestApp(asynctest.TestCase):
     async def test_read_root(self):
         """ Fetch an endpoint from the app. """
         async with aiohttp.ClientSession() as session:
-            async with session.get("http://127.0.0.1:8000/") as resp:
+            async with session.get("http://127.0.0.1:8000/api/healthchecker") as resp:
                 data = await resp.json()
         self.assertEqual(data, {"msg": "Hello World"})

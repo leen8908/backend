@@ -35,8 +35,13 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int
     REFRESH_TOKEN_EXPIRE_MINUTES: int
     JWT_ALGORITHM: str
+    SESSION_DURATION: str
 
     SECRET_KEY: str
+
+    GOOGLE_CLIENT_ID: str
+    GOOGLE_CLIENT_SECRET: str
+    GOOGLE_SECRET_KEY: str
 
     # origin
     CLIENT_ORIGIN: str

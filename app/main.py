@@ -45,11 +45,14 @@ def read_item(item_id: int, q: Union[str, None] = None):
     return {"item_id": item_id, "q": q}
 
 @app.get('/test-google-sso')
-async def home(request: Request):
+async def test_google_sso(request: Request):
+    """
+    To test google sso with google button
+    """
     # user = request.session.get('user')
     # if user is not None:
     #     email = user['email']
-        html = (
+    html = (
             # f'<pre>Email: {email}</pre><br>'
             # '<a href="/docs">documentation</a><br>'
             # '<a href="/logout">logout</a>'
@@ -70,5 +73,5 @@ async def home(request: Request):
                 '</div>'
             '</body>'
         )
-        return HTMLResponse(html)
+    return HTMLResponse(html)
     # return HTMLResponse('<a href="/login">login</a>')

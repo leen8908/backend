@@ -11,19 +11,19 @@ from app.core.config import settings
 from fastapi.responses import JSONResponse
 router = APIRouter()
 
-
-@router.get("/", response_model=List[schemas.User])
-def read_users(
-    db: Session = Depends(deps.get_db),
-    skip: int = 0,
-    limit: int = 100,
-    current_user: models.User = Depends(deps.get_current_active_superuser),
-) -> Any:
-    """
-    Retrieve users.
-    """
-    users = crud.user.get_multi(db, skip=skip, limit=limit)
-    return users
+## TODO
+# @router.get("/", response_model=List[schemas.User])
+# def read_users(
+#     db: Session = Depends(deps.get_db),
+#     skip: int = 0,
+#     limit: int = 100,
+#     current_user: models.User = Depends(deps.get_current_active_superuser),
+# ) -> Any:
+#     """
+#     Retrieve users.
+#     """
+#     users = crud.user.get_multi(db, skip=skip, limit=limit)
+#     return users
 
 
 @router.post("/", response_model=schemas.user.UserMessage)
@@ -63,29 +63,29 @@ def read_user_me(
     
     return {"message": "success","data":current_user}
 
+## TODO
+# @router.post("/profile", response_model=schemas.user.UserMessage)
+# def read_user_by_email(
+#     *,
+#     db: Session = Depends(deps.get_db),
+#     user_in: schemas.user.UserGetBase,
+#     current_user: models.User = Depends(deps.get_current_active_superuser)
+# ) -> Any:
+#     """
+#     Read active user's profile by email for super user only.
+#     """
+#     user = crud.user.get_by_email(db, email=user_in.email)
+#     if not user:
+#         raise HTTPException(
+#         status_code=204,
+#         detail="Failed to get profile by the email."
+#     )
 
-@router.post("/profile", response_model=schemas.user.UserMessage)
-def read_user_by_email(
-    *,
-    db: Session = Depends(deps.get_db),
-    user_in: schemas.user.UserGetBase,
-    current_user: models.User = Depends(deps.get_current_active_superuser)
-) -> Any:
-    """
-    Read active user's profile by email for super user only.
-    """
-    user = crud.user.get_by_email(db, email=user_in.email)
-    if not user:
-        raise HTTPException(
-        status_code=204,
-        detail="Failed to get profile by the email."
-    )
-
-    return {
-        "message": "success",
-        "data": user
-    }
-    #return user
+#     return {
+#         "message": "success",
+#         "data": user
+#     }
+#     #return user
 
 
 @router.put("/profile", response_model=schemas.user.UserMessage)
@@ -100,7 +100,13 @@ def update_user_profile(
     Update current logged-in user's profile.
     """
     user = crud.user.get_by_email(db, email=jsonable_encoder(current_user["email"]))
-    user = crud.user.update(db, db_obj=user, obj_in=user_in)
+    try:
+        user = crud.user.update(db, db_obj=user, obj_in=user_in)
+    except:
+        raise HTTPException(
+             status_code=400,
+             detail=f"duplicate line_id",
+        )
 
     return {
         "message": "success",
@@ -109,7 +115,7 @@ def update_user_profile(
     }
     
 
-@router.get('/logout', tags=['auth'], response_model=schemas.user.UserMessage)
+@router.get('/logout', response_model=schemas.user.UserMessage)
 async def logout(request: Request):
     user = request.session.get('user')
     if not user:

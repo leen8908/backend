@@ -17,7 +17,6 @@ from sqlalchemy.orm import Session
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from app.schemas.user import UserCreate
-from app.routers.api_v1.login import google_login_access_token
 import loguru
 from datetime import timedelta
 from app.core import security
@@ -47,7 +46,7 @@ router = APIRouter()
 @router.post('/sso-login')
 def google_auth(request:Request, response: Response, db: Session =Depends(deps.get_db), credential: str = Form(...)) -> Any:
     """
-    Google credential decode
+    Google credential decode and authentication
     """
     # Supplied by g_id_onload
     tokenid = credential

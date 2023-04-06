@@ -12,14 +12,19 @@ from pydantic import BaseModel, EmailStr
 class UserBase(BaseModel):
     email: Optional[EmailStr] = None
     is_admin: bool = False
-    name: Optional[str] = None
+    name: Optional[str] = "--"
 
+class UserUpdateNoEmail(BaseModel):
+    name: Optional[str] = "--"
+    line_id: Optional[str] = None
+    image: Optional[str] = None
 
 # Properties to receive via API on creation
 class UserCreate(UserBase):
-    password: str
-    line_id: Optional[str]
-    image: Optional[str]
+    password: str = None
+    line_id: Optional[str] = None
+    image: Optional[str] = None
+    is_google_sso: Optional[bool] = False
 
 
 # Properties to receive via API on update
@@ -43,3 +48,12 @@ class User(UserInDBBase):
 # Additional properties stored in DB
 class UserInDB(UserInDBBase):
     hashed_password: str
+
+class UserGetBase(BaseModel):
+    email: Optional[EmailStr] = None
+    class Config:
+        orm_mode = True
+
+class UserMessage(BaseModel):
+    message:str
+    data: Optional[User] = None

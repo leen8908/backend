@@ -55,9 +55,14 @@ class MatchingRoomInDB(MatchingRoomInDBBase):
     finish_time: datetime
 
 
-class MatchingRoomWithMessage(BaseModel):
+class MatchingRoomsWithMessage(BaseModel):
     message: str
     data: Optional[List[MatchingRoom]] = None
+
+
+class MatchingRoomWithMessage(BaseModel):
+    message: str
+    data: Optional[MatchingRoom] = None
 
 
 class MatchingRoomWithSearch(BaseModel):

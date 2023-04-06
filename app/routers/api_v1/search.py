@@ -12,7 +12,7 @@ from app.core.config import settings
 router = APIRouter()
 
 
-@router.post("/matching-room/list", response_model=schemas.MatchingRoomWithMessage)
+@router.post("/matching-room/list", response_model=schemas.MatchingRoomsWithMessage)
 def search_matching_rooms(
     mr_search_in: schemas.MatchingRoomWithSearch,
     db: Session = Depends(deps.get_db),

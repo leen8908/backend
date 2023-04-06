@@ -12,7 +12,7 @@ from app.core.config import settings
 router = APIRouter()
 
 
-@router.post("/my-list", response_model=schemas.MatchingRoomWithMessage)
+@router.post("/my-list", response_model=schemas.MatchingRoomsWithMessage)
 def read_my_matching_rooms(
     user_in: schemas.User,
     db: Session = Depends(deps.get_db),
@@ -38,12 +38,12 @@ def read_my_matching_rooms(
     return {'message': 'success', 'data': matching_rooms}
 
 
-# @router.post("/", response_model=schemas.MatchingRoom)
+# @router.post("/", response_model=schemas.MatchingRoomWithMessage)
 # def create_matching_room(
 #     *,
 #     db: Session = Depends(deps.get_db),
 #     matching_room_in: schemas.MatchingRoomCreate,
-#     current_user: models.user = Depends(deps.get_current_active_superuser),
+#     # current_user: models.user = Depends(deps.get_current_active_superuser),
 # ) -> Any:
 #     """
 #     Create new matching room.
@@ -56,10 +56,10 @@ def read_my_matching_rooms(
 #             detail="The matching room with this room_id already exists in the system.",
 #         )
 #     matching_room = crud.matching_room.create(db, obj_in=matching_room_in)
-#     return matching_room
+#     return {'message': 'success', 'data': matching_room}
 
 
-# @router.delete("/", response_model=dict)
+# @router.delete("/", response_model=schemas.MatchingRoomWithMessage)
 # def delete_matching_room(
 #     db: Session = Depends(deps.get_db),
 #     room_id: str = "",
@@ -68,6 +68,11 @@ def read_my_matching_rooms(
 #     """
 #     Delete matching room with room_id.
 #     """
+#     if (room_id == '' or room_id is None):
+#         raise HTTPException(
+#             status_code=400,
+#             detail="Fail to delete matching room. Missing parameter: room_id"
+#         )
 #     matching_room = crud.matching_room.get_by_room_id(
 #         db, room_id=room_id)
 #     if not matching_room:
@@ -77,6 +82,6 @@ def read_my_matching_rooms(
 #         )
 #     isDeleteSuccessfully = crud.matching_room.delete(db, room_id)
 #     if isDeleteSuccessfully:
-#         return {"message": "Success"}
+#         return {'message': 'success', 'data': None}
 #     else:
-#         return {"message": "Fail"}
+#         return {'message': 'fail', 'data': None}

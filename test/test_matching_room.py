@@ -19,7 +19,7 @@ client = TestClient(app)
 def test_get_my_matching_rooms():
     response = client.post(
         f"{settings.API_V1_STR}/matching-room/my-list",
-        json={"email": "registered@gmail.com"},
+        json={"email": "admin@sdm-teamatch.com"},
     )
     assert response.status_code == 200
     assert response.json()['message'] == 'success'
@@ -58,7 +58,7 @@ def test_search_matching_rooms():
 def test_search_matching_rooms_with_user():
     response = client.post(
         f"{settings.API_V1_STR}/search/matching-room/list",
-        json={"user_email": "registered@gmail.com", "prompt": "", "query_all": False},
+        json={"user_email": "admin@sdm-teamatch.com", "prompt": "", "query_all": False},
     )
     assert response.status_code == 200
     assert response.json()['message'] == 'success'

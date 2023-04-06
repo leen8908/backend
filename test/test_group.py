@@ -8,7 +8,7 @@ client = TestClient(app)
 def test_get_my_groups():
     response = client.post(
         f"{settings.API_V1_STR}/group/my-list",
-        json={"email": "registered@gmail.com"},
+        json={"email": "admin@sdm-teamatch.com"},
     )
     assert response.status_code == 200
     # assert response.json()['data'][0]['name'] == 'test_matching_room-group001'
@@ -36,7 +36,7 @@ def test_get_my_groups_user_not_found():
 def test_search_groups():
     response = client.post(
         f"{settings.API_V1_STR}/search/group/list",
-        json={"user_email": "registered@gmail.com", "prompt": "test"},
+        json={"user_email": "admin@sdm-teamatch.com", "prompt": "test"},
     )
     assert response.status_code == 200
     assert response.json()['message'] == 'success'

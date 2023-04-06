@@ -8,7 +8,7 @@ client = TestClient(app)
 def test_get_my_notifications():
     response = client.post(
         f"{settings.API_V1_STR}/notification/my-list",
-        json={"email": "registered@gmail.com"},
+        json={"email": "admin@sdm-teamatch.com"},
     )
     assert response.status_code == 200
     assert response.json()['message'] == 'success'

@@ -25,9 +25,9 @@ class Settings(BaseSettings):
     POSTGRES_HOST: str
     POSTGRES_HOSTNAME: str
 
-    ADMIN_EMAIL: str
-    ADMIN_NAME: str
-    ADMIN_PASSWORD: str
+    ADMIN_EMAIL: str = "admin@sdm-teamatch.com"
+    ADMIN_NAME: str = "admin"
+    ADMIN_PASSWORD: str = "1234"
 
     # auth
     JWT_PUBLIC_KEY: str

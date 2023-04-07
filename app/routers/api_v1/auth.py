@@ -9,14 +9,14 @@ from starlette.middleware.sessions import SessionMiddleware
 from starlette.responses import JSONResponse
 from app.core.config import settings
 from starlette.responses import RedirectResponse
-from app import crud
+from app import crud, schemas
 from app.routers import deps
 from app.routers.api_v1.login import login_access_token
 from typing import Any
 from sqlalchemy.orm import Session
 from google.oauth2 import id_token
 from google.auth.transport import requests
-from app.schemas.user import UserCreate
+from app.schemas.user import UserCreate, UserCredential
 import loguru
 from datetime import timedelta
 from app.core import security
@@ -27,13 +27,13 @@ from fastapi.encoders import jsonable_encoder
 router = APIRouter()
 
 
-@router.post('/sso-login')
-def google_auth(request:Request, response: Response, db: Session =Depends(deps.get_db), credential: str = Form(...)) -> Any:
+@router.post('/sso-login',response_model=schemas.MatchingRoomsWithMessage)
+def google_auth(request:Request, response: Response, db: Session =Depends(deps.get_db), credential: UserCredential = None) -> Any:
     """
     Google credential decode and authentication
     """
     # Supplied by g_id_onload
-    tokenid = credential
+    tokenid = credential.credential
     try:
         idinfo = id_token.verify_oauth2_token(tokenid, requests.Request(), settings.GOOGLE_CLIENT_ID, clock_skew_in_seconds=5)
         
@@ -88,8 +88,9 @@ def google_auth(request:Request, response: Response, db: Session =Depends(deps.g
         }
 
         # 回傳 Matching room list
+        matching_rooms = crud.matching_room.search_with_user_and_name(db)
 
-        return 
+        return {'message': 'success', 'data': matching_rooms}
     except ValueError:
         # Invalid token
         return JSONResponse(

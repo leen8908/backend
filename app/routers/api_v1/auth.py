@@ -16,7 +16,7 @@ from typing import Any
 from sqlalchemy.orm import Session
 from google.oauth2 import id_token
 from google.auth.transport import requests
-from app.schemas.user import UserCreate
+from app.schemas.user import UserCreate, UserCredential
 import loguru
 from datetime import timedelta
 from app.core import security
@@ -28,12 +28,12 @@ router = APIRouter()
 
 
 @router.post('/sso-login',response_model=schemas.MatchingRoomsWithMessage)
-def google_auth(request:Request, response: Response, db: Session =Depends(deps.get_db), credential: str = Form(...)) -> Any:
+def google_auth(request:Request, response: Response, db: Session =Depends(deps.get_db), credential: UserCredential = None) -> Any:
     """
     Google credential decode and authentication
     """
     # Supplied by g_id_onload
-    tokenid = credential
+    tokenid = credential.credential
     try:
         idinfo = id_token.verify_oauth2_token(tokenid, requests.Request(), settings.GOOGLE_CLIENT_ID, clock_skew_in_seconds=5)
         

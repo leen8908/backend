@@ -38,10 +38,6 @@ def create_user(
     """
     user = crud.user.get_by_email(db, email=user_in.email)
     if user:
-        # return JSONResponse(
-        #     status_code=400,
-        #     content={"message": "The user with this email already exists in the system.", "data": None},
-        # )
         raise HTTPException(
             status_code=400,
             detail="The user with this username already exists in the system.",

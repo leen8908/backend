@@ -54,6 +54,9 @@ class UserGetBase(BaseModel):
     class Config:
         orm_mode = True
 
+class UserCredential(BaseModel):
+    credential: str
+
 class UserMessage(BaseModel):
     message:str
     data: Optional[User] = None

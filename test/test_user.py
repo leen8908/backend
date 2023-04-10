@@ -11,7 +11,7 @@ from itsdangerous import TimestampSigner
 from base64 import b64encode
 import json
 
-#client = TestClient(app)
+client = TestClient(app)
 
 # @pytest.fixture(scope="module")           #new function
 # def normal_user_token_headers(client: TestClient, db_session: Session):
@@ -57,77 +57,40 @@ def create_session_cookie(data) -> str:
 
 #### Test ####
 def test_read_user_me_who_has_logged_in(get_test_client,get_server_api):
-    client = get_test_client
-     # create new google sso user
-    email = random_lower_string()+"@example.com"
-    name = random_lower_string()
-    password = random_lower_string()
-    data = {"email": email, "name": name, "password": password, "is_google_sso": True}
-    response = client.post(
-        f"{get_server_api}{settings.API_V1_STR}/users/",
-        json=data
-    )
-    user = response.json()['data']
+    email = "admin@sdm-teamatch.com"
+    name = "admin"
+    user={"email": email, "name": name}
 
     response = client.get(f"{get_server_api}{settings.API_V1_STR}/users/profile/me/", cookies={'session': create_session_cookie({'user': user})})
     client.get(f"{get_server_api}{settings.API_V1_STR}/users/logout")
-    assert 200 <= response.status_code < 300
+    assert response.status_code == 200
     assert email == response.json()["data"]["email"]
     assert response.json()["message"] == "success"
 
 def test_read_user_me_who_has_not_logged_in(get_test_client,get_server_api):
-    client = get_test_client
-    # create new google sso user
-    email = random_lower_string()+"@example.com"
-    name = random_lower_string()
-    password = random_lower_string()
-    data = {"email": email, "name": name, "password": password, "is_google_sso": True}
-    response = client.post(
-        f"{get_server_api}{settings.API_V1_STR}/users/",
-        json=data
-    )
-
     response = client.get(f"{get_server_api}{settings.API_V1_STR}/users/profile/me/")
     assert response.status_code == 401
     assert response.json()["detail"] == "Could not validate credentials."
 
 def test_update_logged_in_user_profile(get_test_client, get_server_api):
-    client = get_test_client
-    # create new google sso user
-    email = random_lower_string()+"@example.com"
-    name = random_lower_string()
-    password = random_lower_string()
-    data = {"email": email, "name": name, "password": password, "is_google_sso": True}
-    response = client.post(
-        f"{get_server_api}{settings.API_V1_STR}/users/",
-        json=data
-    )
+    email = "admin@sdm-teamatch.com"
+    name = "admin"
+    user={"email": email, "name": name}
     line_id = random_lower_string()
     update_data = {"line_id": line_id}
-    response = client.put(f"{get_server_api}{settings.API_V1_STR}/users/profile", json=update_data, cookies={'session': create_session_cookie({'user': response.json()['data']})})
+    response = client.put(f"{get_server_api}{settings.API_V1_STR}/users/profile", json=update_data, cookies={'session': create_session_cookie({'user': user})})
     client.get(f"{get_server_api}{settings.API_V1_STR}/users/logout")
-    assert 200 <= response.status_code < 300
+    assert response.status_code == 200
     assert email == response.json()["data"]["email"]
     assert response.json()["message"] == "success"
 
 def test_update_user_profile_who_has_not_logged_in(get_test_client,get_server_api):
-    client = get_test_client
-    # create new google sso user
-    email = random_lower_string()+"@example.com"
-    name = random_lower_string()
-    password = random_lower_string()
-    data = {"email": email, "name": name, "password": password, "is_google_sso": True}
-    response = client.post(
-        f"{get_server_api}{settings.API_V1_STR}/users/",
-        json=data
-    )
     update_data = {"line_id": "98765"}
     response = client.put(f"{get_server_api}{settings.API_V1_STR}/users/profile", json=update_data)
     assert response.status_code == 401
     assert response.json()["detail"] == "Could not validate credentials."
 
 def test_create_new_user(get_test_client,get_server_api):
-    client = get_test_client
     email = random_lower_string()+"@example.com"
     name = random_lower_string()
     password = random_lower_string()
@@ -142,10 +105,9 @@ def test_create_new_user(get_test_client,get_server_api):
     assert email == created_user["data"]["email"]
 
 def test_create_existing_user(get_test_client,get_server_api):
-    client = get_test_client
-    email = "user1@example.com"
-    name = random_lower_string()
-    password = random_lower_string()
+    email = "admin@sdm-teamatch.com"
+    name = "admin"
+    password = "1234"
     data = {"email": email, "name": name, "password": password}
     response = client.post(
         f"{get_server_api}{settings.API_V1_STR}/users/",

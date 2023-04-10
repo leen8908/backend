@@ -40,21 +40,15 @@ def get_current_user(
         token_data = schemas.TokenPayload(**payload)
     except (jwt.JWTError, ValidationError) as e:
         loguru.logger.error(f"Error: {e}")
-        # raise HTTPException(
-        #     status_code=status.HTTP_403_FORBIDDEN,
-        #     detail=f"{e}",
-        # )
-        return JSONResponse(
+        raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            content={"message":f"{e}", "data": None},
+            detail=f"{e}",
         )
+    
     user = crud.user.get(db, id=token_data.sub)
     if not user:
-        #raise HTTPException(status_code=204, detail="User not found")
-        return JSONResponse(
-            status_code=204,
-            content={"message": "User not found", "data": None},
-        )
+        raise HTTPException(status_code=204, detail="User not found")
+        
     return user
 
 
@@ -63,11 +57,8 @@ def get_current_active_user(
 ) -> models.user:
     if not crud.user.is_active(current_user):
         loguru.logger.info("Inactive user")
-        return JSONResponse(
-            status_code=400,
-            content={"message": "Inactive user", "data": None},
-        )
-        #raise HTTPException(status_code=400, detail="Inactive user")
+        raise HTTPException(status_code=400, detail="Inactive user")
+    
     return current_user
 
 
@@ -76,20 +67,17 @@ def get_current_active_superuser(
 ) -> models.user:
     if not crud.user.is_admin(current_user):
         loguru.logger.info("The user doesn't have enough privileges")
-        # raise HTTPException(
-        #     status_code=400, detail="The user doesn't have enough privileges"
-        # )
-        return JSONResponse(
-            status_code=400,
-            content={"message": "The user doesn't have enough privileges", "data": None},
+        raise HTTPException(
+            status_code=400, detail="The user doesn't have enough privileges"
         )
+
     return current_user
 
-async def get_login_user(request: Request) -> Optional[dict]:
-    user = request.session.get('user')
-    if user is not None:
-        return user
-    else:
-        raise HTTPException(status_code=401, detail='Could not validate credentials.')
+# async def get_login_user(request: Request) -> Optional[dict]:
+#     user = request.session.get('user')
+#     if user is not None:
+#         return user
+#     else:
+#         raise HTTPException(status_code=401, detail='Could not validate credentials.')
 
     

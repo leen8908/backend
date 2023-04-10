@@ -1,0 +1,19 @@
+from app.main import app  # Flask instance of the API
+from fastapi.testclient import TestClient
+from app.core.config import settings
+import pytest
+
+client = TestClient(app)
+
+@pytest.fixture(scope="module")
+def get_server_api():
+    server_name = f"http://localhost:8000"
+    return server_name
+
+#### Test ####
+def test_google_auth(get_server_api):
+    credential = "eyJhbGciOiJSUzI1NiIsImtpZCI6ImFjZGEzNjBmYjM2Y2QxNWZmODNhZjgzZTE3M2Y0N2ZmYzM2ZDExMWMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJuYmYiOjE2ODExNDI4MTMsImF1ZCI6Ijc2ODMwNTUzMzI1Ni1lZzNpZnQ5NnNwb2xndG02OWJvNnIzNDIzZGYxM2M3My5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsInN1YiI6IjEwNTA2NzU1OTQ2Mjc4NTI3NTc5OCIsImVtYWlsIjoic2RtMjAyMy5ubzJAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF6cCI6Ijc2ODMwNTUzMzI1Ni1lZzNpZnQ5NnNwb2xndG02OWJvNnIzNDIzZGYxM2M3My5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsIm5hbWUiOiJTRCBNIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FHTm15eFlOc0hQQVBjOHAzMkFzMzF3QXlmdU12elN2NXhrTEM0ZGNfLWFPPXM5Ni1jIiwiZ2l2ZW5fbmFtZSI6IlNEIiwiZmFtaWx5X25hbWUiOiJNIiwiaWF0IjoxNjgxMTQzMTEzLCJleHAiOjE2ODExNDY3MTMsImp0aSI6ImZkMjc5YTc1MzE0Y2UwMDg3OTU3OWIzYzZjMjJmOGQ2ZWNlM2Y3ZGMifQ.FWkVDeEaxDFFnmGJsknfuxassOkA-y5q4tSXL0uhJTdHPvXnFEF7s3yRqqgK-AkghSedFSzwVr4TQDo2fncWiyxTcoPyFj1jBs3LuA-iH74-4MJyg0bYXg0UQtlBqpkVp7eJIoQhyxeMYu0cLEOMQnbK5kqxQm2TxYs5RU0lSPmtj67JGbYEaXyNMMtMfvNtHbdwUGVnPuqzjQjhWeOnF4shPHKoRwojhM9OiDyiaRncu47_I_iI4yxZ4ZdoXgOwsTzz4NaF47UuET5Urq1x4q9p3nXeZn1KvwGf_UwIr_Z7cxNk0fXh7nS_qIcKzMAWvorD7El4g9BKoEOKckOeUQ"
+    data = {"credential": credential}
+    response = client.post(f"{get_server_api}{settings.API_V1_STR}/auth/sso-login",json=data)
+    client.get(f"{get_server_api}{settings.API_V1_STR}/users/logout")
+    assert response.status_code == 200

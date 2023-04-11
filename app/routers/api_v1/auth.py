@@ -28,11 +28,13 @@ router = APIRouter()
 
 
 @router.post('/sso-login',response_model=schemas.MatchingRoomsWithMessage)
-def google_auth(request:Request, response: Response, db: Session =Depends(deps.get_db), credential: UserCredential = None) -> Any:
+#def google_auth(request:Request, response: Response, db: Session =Depends(deps.get_db), credential:str= Form(...)) -> Any: # for google 重新導向URI(google重新導向怪怪的應該不會用這個ㄌ)
+def google_auth(request:Request, response: Response, db: Session =Depends(deps.get_db), credential: UserCredential = None) -> Any: # for 前端直接傳 credential
     """
     Google credential decode and authentication
     """
     # Supplied by g_id_onload
+    #tokenid = credential
     tokenid = credential.credential
     try:
         idinfo = id_token.verify_oauth2_token(tokenid, requests.Request(), settings.GOOGLE_CLIENT_ID, clock_skew_in_seconds=5)
@@ -90,7 +92,9 @@ def google_auth(request:Request, response: Response, db: Session =Depends(deps.g
         # 回傳 Matching room list
         matching_rooms = crud.matching_room.search_with_user_and_name(db)
 
-        return {'message': 'success', 'data': matching_rooms}
+
+        return {'message': 'success', 'data': matching_rooms}    
+
     except ValueError:
         # Invalid token
         return JSONResponse(

@@ -19,6 +19,7 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
             email=obj_in.email,
             password=obj_in.password,
             name=obj_in.name,
+            image=obj_in.image,
             is_admin=obj_in.is_admin,
             is_google_sso=obj_in.is_google_sso,
         )

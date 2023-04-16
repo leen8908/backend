@@ -37,9 +37,12 @@ jobs:
       run: |
         echo "Start creating .env file"
         echo "${{ secrets.ENV_FILE }}" > .env
+        echo "${{ secrets.ENV_FILE }}" > ./backend/.env
+        echo $PWD
     - name: Run test
       working-directory: ./
       run: |
+        echo $PWD
         echo "Start running unit-test"
         cp ./docker-compose-file-template.yml ./docker-compose.yml
         echo "Start building"

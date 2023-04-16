@@ -96,7 +96,7 @@ def update_user_profile(
     except exc.IntegrityError:
         raise HTTPException(
             status_code=400,
-            detail=f"duplicate line_id",
+            detail="duplicate line_id",
         )
 
     return {

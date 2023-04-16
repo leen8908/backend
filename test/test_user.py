@@ -20,7 +20,7 @@ client = TestClient(app)
 
 @pytest.fixture(scope="module")
 def get_server_api():
-    server_name = f'http://localhost:8000'
+    server_name = "http://localhost:8000"
     return server_name
 
 
@@ -99,9 +99,7 @@ def test_create_new_user(get_server_api):
     name = random_lower_string()
     password = random_lower_string()
     data = {"email": email, "name": name, "password": password}
-    response = client.post(
-        f"{get_server_api}{settings.API_V1_STR}/users/", json=data, cookies={}
-    )
+    response = client.post(f"{get_server_api}{settings.API_V1_STR}/users/", json=data)
     assert 200 <= response.status_code < 300
     created_user = response.json()
     assert email == created_user["data"]["email"]

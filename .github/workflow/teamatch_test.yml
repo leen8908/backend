@@ -17,6 +17,34 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: pre-commit/action@v3.0.0
-        
-  
-      
+
+
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 1
+      matrix:
+        python-version: [3.9]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Create env file
+      working-directory: ./
+      run: |
+        echo "Start creating .env file"
+        echo "${{ secrets.ENV_FILE }}" > .env
+    - name: Run test
+      working-directory: ./
+      run: |
+        echo "Start running unit-test"
+        cp ./docker-compose-file-template.yml ./docker-compose.yml
+        echo "Start building"
+        docker-compose up --build -d
+        echo "Start define entrypoint"
+        ENTRYPOINT="python -m pytest --cov=app --html=test/report/report.html -W ignore::DeprecationWarning -s --capture=fd --log-cli-level=INFO"
+        echo "Start run pytest"
+        docker-compose exec -T backend $ENTRYPOINT

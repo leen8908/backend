@@ -1,18 +1,16 @@
 from typing import Generator
 
+import loguru
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
-from fastapi.responses import JSONResponse
+
 from app import crud, models, schemas
 from app.core import security
 from app.core.config import settings
 from app.database.session import SessionLocal
-from fastapi import Request
-from typing import Optional
-import loguru
 
 reusable_oauth2 = OAuth2PasswordBearer(
     tokenUrl=f"{settings.API_V1_STR}/login/access-token"
@@ -20,6 +18,7 @@ reusable_oauth2 = OAuth2PasswordBearer(
 # reusable_oauth2 = OAuth2PasswordBearer(
 #     tokenUrl=f"{settings.API_V1_STR}/google-login/access-token"
 # )
+
 
 def get_db() -> Generator:
     try:
@@ -44,11 +43,11 @@ def get_current_user(
             status_code=status.HTTP_403_FORBIDDEN,
             detail=f"{e}",
         )
-    
+
     user = crud.user.get(db, id=token_data.sub)
     if not user:
         raise HTTPException(status_code=204, detail="User not found")
-        
+
     return user
 
 
@@ -58,7 +57,7 @@ def get_current_active_user(
     if not crud.user.is_active(current_user):
         loguru.logger.info("Inactive user")
         raise HTTPException(status_code=400, detail="Inactive user")
-    
+
     return current_user
 
 
@@ -73,11 +72,10 @@ def get_current_active_superuser(
 
     return current_user
 
+
 # async def get_login_user(request: Request) -> Optional[dict]:
 #     user = request.session.get('user')
 #     if user is not None:
 #         return user
 #     else:
 #         raise HTTPException(status_code=401, detail='Could not validate credentials.')
-
-    

@@ -1,12 +1,15 @@
-import httplib2
+import httpx
 import pytest
 from fastapi.testclient import TestClient
-from oauth2client import GOOGLE_TOKEN_URI, client
 
 from app.core.config import settings
 from app.main import app  # Flask instance of the API
 
+# from oauth2client import GOOGLE_TOKEN_URI, client
+
+
 test_client = TestClient(app)
+client = httpx.AsyncClient()
 
 
 @pytest.fixture(scope="module")
@@ -19,20 +22,18 @@ def get_server_api():
 def get_token_id():
     client_id = settings.GOOGLE_CLIENT_ID
     client_secret = settings.GOOGLE_CLIENT_SECRET
-    refresh_token = "1//04B7dCuIB3h2YCgYIARAAGAQSNwF-L9Ir9uCxqACRC6NeXcLaKuyuhkz2S1I-DNwPfzqQLOwfL-UVkOG6kTWk74jZsSoPCGH7Yp4"
+    refresh_token = "1//04puCTtWhEyMiCgYIARAAGAQSNwF-L9IrfZCxCMa5klAX2MxipBNzCbCr2rEgddoS7ejTrWJL9Oza8TJnBcoZPXg6EQgYK3Nwh4w"
+    post_body = {
+        "client_id": client_id,
+        "client_secret": client_secret,
+        "grant_type": "refresh_token",
+        "refresh_token": refresh_token,
+    }
 
-    creds = client.OAuth2Credentials(
-        access_token=None,
-        client_id=client_id,
-        client_secret=client_secret,
-        refresh_token=refresh_token,
-        token_expiry=None,
-        token_uri=GOOGLE_TOKEN_URI,
-        user_agent="pythonclient",
-    )
+    response = httpx.post("https://oauth2.googleapis.com/token", json=post_body)
 
-    creds.refresh(httplib2.Http())
-    id_token = creds.id_token_jwt
+    id_token = response.json()["id_token"]
+
     return id_token
 
 

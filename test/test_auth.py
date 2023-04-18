@@ -1,12 +1,13 @@
 import httpx
 import pytest
 from fastapi.testclient import TestClient
+from google.auth.transport import requests
+from google.oauth2 import id_token
 
+from app import crud
 from app.core.config import settings
+from app.database.session import db_session
 from app.main import app  # Flask instance of the API
-
-# from oauth2client import GOOGLE_TOKEN_URI, client
-
 
 test_client = TestClient(app)
 client = httpx.AsyncClient()
@@ -22,7 +23,9 @@ def get_server_api():
 def get_token_id():
     client_id = settings.GOOGLE_CLIENT_ID
     client_secret = settings.GOOGLE_CLIENT_SECRET
-    refresh_token = "1//04puCTtWhEyMiCgYIARAAGAQSNwF-L9IrfZCxCMa5klAX2MxipBNzCbCr2rEgddoS7ejTrWJL9Oza8TJnBcoZPXg6EQgYK3Nwh4w"
+    # refresh_token = "1//04puCTtWhEyMiCgYIARAAGAQSNwF-L9IrfZCxCMa5klAX2MxipBNzCbCr2rEgddoS7ejTrWJL9Oza8TJnBcoZPXg6EQgYK3Nwh4w" #SDM
+    refresh_token = "1//048_5yRM12FFvCgYIARAAGAQSNwF-L9IrdAP1F8Kl_5tpnrTALjwUscnYjsUsl056-S0LCznkp3TZdMHUClAAZUN33XLenEQuL04"  # me
+    # access_token = "ya29.a0Ael9sCMnHqRrjWZkL1l7bZuz3IXXTpKtJ90aiiw0pHbneWgIuFA-6MEFWjcEs7ZpKvMmKE67mkrp5Fu6wJYXmhK2cLACneHOIDgrbMB8j3Y6-cmmEVaoNWsOCxg21w3GnH0kUoIp6IOxeLFoUSWJm8xzPgPxaCgYKAfgSARMSFQF4udJhqsJNcq5l_FTXN0nRGIbnTA0163" #me
     post_body = {
         "client_id": client_id,
         "client_secret": client_secret,
@@ -38,11 +41,37 @@ def get_token_id():
 
 
 # test
-def test_google_auth(get_server_api, get_token_id):
+def test_google_auth_verify_id_token_successfully(get_server_api, get_token_id):
     credential = get_token_id
     data = {"credential": credential}
     response = test_client.post(
         f"{get_server_api}{settings.API_V1_STR}/auth/sso-login", json=data
     )
-    test_client.get(f"{get_server_api}{settings.API_V1_STR}/users/logout")
-    assert response.status_code == 200
+    idinfo = id_token.verify_oauth2_token(
+        credential,
+        requests.Request(),
+        settings.GOOGLE_CLIENT_ID,
+        clock_skew_in_seconds=5,
+    )
+    email = idinfo["email"]
+    user = crud.user.get_by_email(db=db_session, email=email)
+    if user:
+        assert response.status_code == 200
+    else:
+        # 因為這個google身分沒有名字之類的info
+        assert response.status_code == 400
+        assert (
+            response.json()["detail"]
+            == "Missing some user info from google authentication. Please use another way to create new account."
+        )
+
+
+def test_google_auth_verify_id_token_failed(get_server_api):
+    credential = "fake_token_id"
+    data = {"credential": credential}
+    response = test_client.post(
+        f"{get_server_api}{settings.API_V1_STR}/auth/sso-login", json=data
+    )
+
+    assert response.status_code == 401
+    assert response.json()["detail"] == "Unauthorized"

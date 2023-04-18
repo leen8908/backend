@@ -38,7 +38,16 @@ def google_auth(
             settings.GOOGLE_CLIENT_ID,
             clock_skew_in_seconds=5,
         )
+        userid = idinfo["sub"]
+        print(userid)
+    except ValueError:
+        # Invalid token
+        raise HTTPException(
+            status_code=401,
+            detail="Unauthorized",
+        )
 
+    try:
         # # 檢查此google帳號是否已建立帳號
         user = crud.user.get_by_email(db, email=idinfo["email"])
 
@@ -101,9 +110,8 @@ def google_auth(
                 "matching_rooms": matching_rooms,
             },
         }
-    except ValueError:
-        # Invalid token
+    except KeyError:
         raise HTTPException(
-            status_code=401,
-            detail="Unauthorized",
+            status_code=400,
+            detail="Missing some user info from google authentication. Please use another way to create new account.",
         )

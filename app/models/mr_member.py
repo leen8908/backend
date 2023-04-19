@@ -1,6 +1,4 @@
-import uuid
-
-from sqlalchemy import Boolean, Column, DateTime, ForeignKey
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, Sequence
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 
@@ -21,12 +19,11 @@ class MR_Member(Base):
         primary_key=True,
         nullable=False,
     )
-    member_uuid = Column(
-        UUID(as_uuid=True),
-        primary_key=True,
+    member_id = Column(
+        Integer,
+        Sequence(start=0, increment=True),  # ?
         unique=True,
         nullable=False,
-        default=uuid.uuid4,
     )
     join_time = Column(DateTime(timezone=True), default=func.now())
     leave_time = Column(DateTime(timezone=True))

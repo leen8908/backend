@@ -12,6 +12,7 @@ from .notification import (
     NotificationCreate,
     NotificationInDB,
     NotificationTextWithMessage,
+    NotificationViewModel,
 )
 from .sso_login import SSOLogin, SSOLoginMessage
 from .token import Token, TokenPayload

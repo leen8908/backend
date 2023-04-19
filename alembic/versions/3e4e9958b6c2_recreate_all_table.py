@@ -1,8 +1,8 @@
 """Recreate all table
 
-Revision ID: 7218187a06f0
+Revision ID: 3e4e9958b6c2
 Revises: 
-Create Date: 2023-04-19 08:32:30.509434
+Create Date: 2023-04-19 10:17:39.070645
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '7218187a06f0'
+revision = '3e4e9958b6c2'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -101,14 +101,6 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('tag_uuid', 'room_uuid'),
     sa.UniqueConstraint('tag_text')
     )
-    op.create_table('GR_Member',
-    sa.Column('user_uuid', sa.UUID(), nullable=False),
-    sa.Column('group_uuid', sa.UUID(), nullable=False),
-    sa.Column('join_time', sa.DateTime(timezone=True), nullable=True),
-    sa.ForeignKeyConstraint(['group_uuid'], ['Group.group_uuid'], ),
-    sa.ForeignKeyConstraint(['user_uuid'], ['User.user_uuid'], ),
-    sa.PrimaryKeyConstraint('user_uuid', 'group_uuid')
-    )
     op.create_table('MR_Member',
     sa.Column('user_uuid', sa.UUID(), nullable=False),
     sa.Column('room_uuid', sa.UUID(), nullable=False),
@@ -123,6 +115,14 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['user_uuid'], ['User.user_uuid'], ),
     sa.PrimaryKeyConstraint('member_id'),
     sa.UniqueConstraint('member_id')
+    )
+    op.create_table('GR_Member',
+    sa.Column('member_id', sa.Integer(), nullable=False),
+    sa.Column('group_uuid', sa.UUID(), nullable=False),
+    sa.Column('join_time', sa.DateTime(timezone=True), nullable=True),
+    sa.ForeignKeyConstraint(['group_uuid'], ['Group.group_uuid'], ),
+    sa.ForeignKeyConstraint(['member_id'], ['MR_Member.member_id'], ),
+    sa.PrimaryKeyConstraint('member_id', 'group_uuid')
     )
     op.create_table('MR_Liked_Hated_Member',
     sa.Column('member_id', sa.Integer(), nullable=False),
@@ -163,8 +163,8 @@ def downgrade() -> None:
     op.drop_table('MR_Rcmed_Member')
     op.drop_table('MR_Member_Tag')
     op.drop_table('MR_Liked_Hated_Member')
-    op.drop_table('MR_Member')
     op.drop_table('GR_Member')
+    op.drop_table('MR_Member')
     op.drop_table('Tag')
     op.drop_table('Notification')
     op.drop_table('MatchingEvent')

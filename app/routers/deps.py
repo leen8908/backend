@@ -1,7 +1,7 @@
-from typing import Generator
+from typing import Generator, Optional
 
 import loguru
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
 from pydantic import ValidationError
@@ -15,9 +15,6 @@ from app.database.session import SessionLocal
 reusable_oauth2 = OAuth2PasswordBearer(
     tokenUrl=f"{settings.API_V1_STR}/login/access-token"
 )
-# reusable_oauth2 = OAuth2PasswordBearer(
-#     tokenUrl=f"{settings.API_V1_STR}/google-login/access-token"
-# )
 
 
 def get_db() -> Generator:
@@ -73,9 +70,9 @@ def get_current_active_superuser(
     return current_user
 
 
-# async def get_login_user(request: Request) -> Optional[dict]:
-#     user = request.session.get('user')
-#     if user is not None:
-#         return user
-#     else:
-#         raise HTTPException(status_code=401, detail='Could not validate credentials.')
+async def get_login_user(request: Request) -> Optional[dict]:
+    user = request.session.get("user")
+    if user is not None:
+        return user
+    else:
+        raise HTTPException(status_code=401, detail="Could not validate credentials.")

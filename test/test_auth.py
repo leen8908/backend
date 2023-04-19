@@ -23,8 +23,8 @@ def get_server_api():
 def get_token_id():
     client_id = settings.GOOGLE_CLIENT_ID
     client_secret = settings.GOOGLE_CLIENT_SECRET
-    # refresh_token = "1//04puCTtWhEyMiCgYIARAAGAQSNwF-L9IrfZCxCMa5klAX2MxipBNzCbCr2rEgddoS7ejTrWJL9Oza8TJnBcoZPXg6EQgYK3Nwh4w" #SDM
-    refresh_token = "1//048_5yRM12FFvCgYIARAAGAQSNwF-L9IrdAP1F8Kl_5tpnrTALjwUscnYjsUsl056-S0LCznkp3TZdMHUClAAZUN33XLenEQuL04"  # me
+    refresh_token = "1//04puCTtWhEyMiCgYIARAAGAQSNwF-L9IrfZCxCMa5klAX2MxipBNzCbCr2rEgddoS7ejTrWJL9Oza8TJnBcoZPXg6EQgYK3Nwh4w"  # SDM
+    # refresh_token = "1//048_5yRM12FFvCgYIARAAGAQSNwF-L9IrdAP1F8Kl_5tpnrTALjwUscnYjsUsl056-S0LCznkp3TZdMHUClAAZUN33XLenEQuL04"  # me
     # access_token = "ya29.a0Ael9sCMnHqRrjWZkL1l7bZuz3IXXTpKtJ90aiiw0pHbneWgIuFA-6MEFWjcEs7ZpKvMmKE67mkrp5Fu6wJYXmhK2cLACneHOIDgrbMB8j3Y6-cmmEVaoNWsOCxg21w3GnH0kUoIp6IOxeLFoUSWJm8xzPgPxaCgYKAfgSARMSFQF4udJhqsJNcq5l_FTXN0nRGIbnTA0163" #me
     post_body = {
         "client_id": client_id,

@@ -12,6 +12,7 @@ from .notification import (
     NotificationCreate,
     NotificationInDB,
     NotificationTextWithMessage,
+    NotificationViewModel,
 )
 from .token import Token, TokenPayload
 from .user import User, UserCreate, UserInDB, UserUpdate

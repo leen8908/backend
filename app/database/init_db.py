@@ -25,3 +25,4 @@ def init_db(db: Session) -> None:
             is_active=True,
         )
         user = crud.user.create(db, obj_in=user_in)  # noqa: F841
+

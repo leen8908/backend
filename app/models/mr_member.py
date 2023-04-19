@@ -1,7 +1,7 @@
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, Sequence
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
-
+from app.database.session import engine
 from app.database.base_class import Base
 
 
@@ -10,18 +10,17 @@ class MR_Member(Base):
     user_uuid = Column(
         UUID(as_uuid=True),
         ForeignKey("User.user_uuid"),
-        primary_key=True,
         nullable=False,
     )
     room_uuid = Column(
         UUID(as_uuid=True),
         ForeignKey("MatchingRoom.room_uuid"),
-        primary_key=True,
         nullable=False,
     )
     member_id = Column(
         Integer,
-        Sequence(start=0, increment=True),  # ?
+        autoincrement=True,
+        primary_key=True,
         unique=True,
         nullable=False,
     )

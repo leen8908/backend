@@ -1,3 +1,4 @@
+from .gr_member import GR_Member, GR_MemberWithSearch
 from .group import Group, GroupCreate, GroupInDB, GroupWithMessage, GroupWithSearch
 from .matching_room import (
     MatchingRoom,
@@ -16,4 +17,4 @@ from .notification import (
 )
 from .sso_login import SSOLogin, SSOLoginMessage
 from .token import Token, TokenPayload
-from .user import User, UserCreate, UserInDB, UserMessage, UserUpdate
+from .user import User, UserCreate, UserInDB, UserMessage, UsersMessage, UserUpdate

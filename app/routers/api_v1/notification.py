@@ -1,7 +1,6 @@
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException
-from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
 from app import crud, models, schemas
@@ -13,14 +12,14 @@ router = APIRouter()
 @router.get("/my-list", response_model=schemas.NotificationTextWithMessage)
 def read_my_notifications(
     db: Session = Depends(deps.get_db),
-    current_user: models.User = Depends(deps.get_login_user),
+    current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
     """
     Retrieve user's notifications.
     """
     try:
         notifications = crud.notification.get_by_receiver_uuid(
-            db=db, receiver_uuid=jsonable_encoder(current_user)["user_uuid"]
+            db=db, receiver_uuid=current_user.user_uuid
         )
     except ValueError as e:
         raise HTTPException(

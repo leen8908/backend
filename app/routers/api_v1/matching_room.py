@@ -1,7 +1,6 @@
 from typing import Any
 
 from fastapi import APIRouter, Depends
-from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
 from app import crud, models, schemas
@@ -13,13 +12,13 @@ router = APIRouter()
 @router.get("/my-list", response_model=schemas.MatchingRoomsWithMessage)
 def read_my_matching_rooms(
     db: Session = Depends(deps.get_db),
-    current_user: models.User = Depends(deps.get_login_user),
+    current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
     """
     Retrieve user's matching rooms.
     """
     matching_rooms = crud.matching_room.search_with_user_and_name(
-        db=db, user_uuid=jsonable_encoder(current_user)["user_uuid"]
+        db=db, user_uuid=current_user.user_uuid
     )
     return {"message": "success", "data": matching_rooms}
 

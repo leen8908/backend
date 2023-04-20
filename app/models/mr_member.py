@@ -25,7 +25,7 @@ class MR_Member(Base):
         nullable=False,
     )
     join_time = Column(DateTime(timezone=True), default=func.now())
-    leave_time = Column(DateTime(timezone=True))
-    is_left = Column(Boolean, nullable=False, default=False)
+    grouped_time = Column(DateTime(timezone=True))
+    is_grouped = Column(Boolean, nullable=False, default=False)
     is_bound = Column(Boolean, nullable=False, default=False)
     bind_uuid = Column(UUID(as_uuid=True), ForeignKey("BindUser.bind_uuid"))

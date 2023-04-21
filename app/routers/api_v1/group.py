@@ -1,7 +1,6 @@
 from typing import Any
 
-from fastapi import APIRouter, Depends
-from fastapi.encoders import jsonable_encoder
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app import crud, models, schemas
@@ -13,16 +12,35 @@ router = APIRouter()
 @router.get("/my-list", response_model=schemas.GroupWithMessage)
 def read_my_groups(
     db: Session = Depends(deps.get_db),
-    current_user: models.User = Depends(deps.get_login_user)  # ,
-    # current_user: models.user = Depends(deps.get_current_active_superuser),
+    current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
     """
     Retrieve user's groups.
     """
     groups = crud.group.search_with_user_and_name(
-        db=db, user_uuid=jsonable_encoder(current_user)["user_uuid"]
+        db=db, user_uuid=current_user.user_uuid
     )
     return {"message": "success", "data": groups}
+
+
+@router.post("/members", response_model=schemas.UsersMessage)
+def get_group_members(
+    gr_member_search_in: schemas.GR_MemberWithSearch,
+    db: Session = Depends(deps.get_db),
+    current_user: models.User = Depends(deps.get_current_active_user),
+) -> Any:
+    """
+    Retrieve group members with group_id.
+    """
+    if gr_member_search_in.group_id == "":
+        raise HTTPException(
+            status_code=400,
+            detail="Fail to get group members. Missing parameter: group_id.",
+        )
+    members = crud.gr_member.get_all_members_by_group_id(
+        db=db, group_id=gr_member_search_in.group_id
+    )
+    return {"message": "success", "data": members}
 
 
 # # TODO: unfinished

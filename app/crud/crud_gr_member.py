@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from app.crud.base import CRUDBase
 from app.models.gr_member import GR_Member
 from app.models.group import Group
+from app.models.mr_member import MR_Member
 from app.models.user import User
 from app.schemas.gr_member import GR_MemberCreate, GR_MemberUpdate
 
@@ -31,10 +32,22 @@ class CRUDGR_Member(CRUDBase[GR_Member, GR_MemberCreate, GR_MemberUpdate]):
         gr_members = self.get_by_group_id(db, group_id=group_id)
         member_list = []
         for gr_member in gr_members:
-            member = (
-                db.query(User).filter(User.user_uuid == gr_member.user_uuid).first()
+            # use member_id to retrieve mr_member
+            mr_member = (
+                db.query(MR_Member)
+                .filter(MR_Member.member_id == gr_member.member_id)
+                .first()
             )
-            member_list.append(member)
+            if mr_member is None:
+                raise ValueError(
+                    f"Fail to retrieve mr_member with member_id={gr_member.member_id}"
+                )
+            else:
+                member = (
+                    db.query(User).filter(User.user_uuid == mr_member.user_uuid).first()
+                )
+                if member is not None:
+                    member_list.append(member)
         return member_list
 
     def create(self, db: Session, *, obj_in: GR_MemberCreate) -> GR_Member:

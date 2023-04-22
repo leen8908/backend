@@ -134,8 +134,8 @@ def upgrade() -> None:
         sa.Column("room_uuid", sa.UUID(), nullable=False),
         sa.Column("member_id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column("join_time", sa.DateTime(timezone=True), nullable=True),
-        sa.Column("leave_time", sa.DateTime(timezone=True), nullable=True),
-        sa.Column("is_left", sa.Boolean(), nullable=False),
+        sa.Column("grouped_time", sa.DateTime(timezone=True), nullable=True),
+        sa.Column("is_grouped", sa.Boolean(), nullable=False),
         sa.Column("is_bound", sa.Boolean(), nullable=False),
         sa.Column("bind_uuid", sa.UUID(), nullable=True),
         sa.ForeignKeyConstraint(

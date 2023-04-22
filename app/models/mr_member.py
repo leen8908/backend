@@ -1,7 +1,7 @@
-from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, Sequence
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
-from app.database.session import engine
+
 from app.database.base_class import Base
 
 

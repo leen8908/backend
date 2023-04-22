@@ -52,7 +52,7 @@ class CRUDGR_Member(CRUDBase[GR_Member, GR_MemberCreate, GR_MemberUpdate]):
 
     def create(self, db: Session, *, obj_in: GR_MemberCreate) -> GR_Member:
         db_obj = GR_MemberCreate(
-            user_uuid=obj_in.user_uuid,
+            member_id=obj_in.member_id,
             group_uuid=obj_in.group_uuid,
             join_time=obj_in.join_time,
         )

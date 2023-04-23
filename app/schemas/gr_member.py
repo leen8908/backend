@@ -17,7 +17,7 @@ class GR_MemberBase(BaseModel):
 
 
 class GR_MemberCreate(GR_MemberBase):
-    user_uuid: UUID
+    member_id: int
     group_uuid: UUID
     join_time: datetime = None
 
@@ -30,7 +30,7 @@ class GR_MemberUpdate(GR_MemberBase):
 
 
 class GR_MemberInDBBase(GR_MemberBase):
-    user_uuid: UUID
+    member_id: int
     group_uuid: UUID
     join_time: datetime = None
 

@@ -16,5 +16,20 @@ from .notification import (
     NotificationViewModel,
 )
 from .sso_login import SSOLogin, SSOLoginMessage
+from .swipe_card import (
+    SwipeCard,
+    SwipeCardInDB,
+    SwipeCardMessage,
+    SwipeCardPreference,
+    SwipeCardRecommend,
+)
 from .token import Token, TokenPayload
-from .user import User, UserCreate, UserInDB, UserMessage, UsersMessage, UserUpdate
+from .user import (
+    User,
+    UserCreate,
+    UserCredential,
+    UserInDB,
+    UserMessage,
+    UsersMessage,
+    UserUpdate,
+)

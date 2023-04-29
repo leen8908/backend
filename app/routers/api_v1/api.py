@@ -8,6 +8,7 @@ from app.routers.api_v1 import (
     notification,
     search,
     user,
+    swipe_card
 )
 
 api_router = APIRouter()
@@ -23,3 +24,4 @@ api_router.include_router(search.router, prefix="/search", tags=["search"])
 api_router.include_router(
     notification.router, prefix="/notification", tags=["notification"]
 )
+api_router.include_router(swipe_card.router, prefix="/swipe-card", tags=["swipe-card"])

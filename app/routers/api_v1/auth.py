@@ -67,7 +67,7 @@ def google_auth(
 
         # 帳號已建立，取得access token
         user = crud.user.get_by_email(db, email=idinfo["email"])
-        loguru.logger.info(f"created_user:{user}")
+        loguru.logger.info(f"created_user:{jsonable_encoder(user)}")
 
         access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = security.create_access_token(

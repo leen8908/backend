@@ -2,9 +2,12 @@ import httpx
 import pytest
 import sqlalchemy as sa
 from fastapi.testclient import TestClient
+from google.auth.transport import requests
+from google.oauth2 import id_token
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils.functions import create_database, database_exists
 
+from app import crud
 from app.core.config import settings
 from app.database.base_class import Base
 
@@ -100,37 +103,37 @@ def get_token_id():
 
 # test
 def test_google_auth_verify_id_token_successfully(
-    get_server_api, get_token_id, test_client
+    get_server_api, get_token_id, test_client, session
 ):
     credential = get_token_id
     data = {"credential": credential}
     response = test_client.post(
         f"{get_server_api}{settings.API_V1_STR}/auth/sso-login", json=data
     )
-    # 因為這個google身分沒有名字之類的info
-    assert response.status_code == 400
-    assert (
-        response.json()["detail"]
-        == "Missing some user info from google authentication. Please use another way to create new account."
-    )
-    # idinfo = id_token.verify_oauth2_token(
-    #     credential,
-    #     requests.Request(),
-    #     settings.GOOGLE_CLIENT_ID,
-    #     clock_skew_in_seconds=5,
+    # # 因為這個google身分沒有名字之類的info
+    # assert response.status_code == 400
+    # assert (
+    #     response.json()["detail"]
+    #     == "Missing some user info from google authentication. Please use another way to create new account."
     # )
-    # email = idinfo["email"]
-    # user = crud.user.get_by_email(db=session, email=email)
+    idinfo = id_token.verify_oauth2_token(
+        credential,
+        requests.Request(),
+        settings.GOOGLE_CLIENT_ID,
+        clock_skew_in_seconds=5,
+    )
+    email = idinfo["email"]
+    user = crud.user.get_by_email(db=session, email=email)
 
-    # if user:
-    #     assert response.status_code == 200
-    # else:
-    #     # 因為這個google身分沒有名字之類的info
-    #     assert response.status_code == 400
-    #     assert (
-    #         response.json()["detail"]
-    #         == "Missing some user info from google authentication. Please use another way to create new account."
-    #     )
+    if user:
+        assert response.status_code == 200
+    else:
+        # 因為這個google身分沒有名字之類的info
+        assert response.status_code == 400
+        assert (
+            response.json()["detail"]
+            == "Missing some user info from google authentication. Please use another way to create new account."
+        )
 
 
 def test_google_auth_verify_id_token_failed(get_server_api, test_client):

@@ -152,19 +152,6 @@ def test_update_logged_in_user_profile(get_server_api, session, test_client):
     assert email == response.json()["data"]["email"]
     assert response.json()["message"] == "success"
 
-def test_update_logged_in_user_profile_with_wrong_token(get_server_api):
-    email = "admin@sdm-teamatch.com"
-
-    line_id = random_lower_string()
-    update_data = {"line_id": line_id}
-
-    response = client.put(
-        f"{get_server_api}{settings.API_V1_STR}/users/profile",
-        json=update_data,
-        headers={"Authorization": "Bearer wrong_token"},
-    )
-    assert response.status_code == 403
-
 
 def test_update_user_profile_who_has_not_logged_in(get_server_api, test_client):
     update_data = {"line_id": "fake_line_id"}

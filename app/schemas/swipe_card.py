@@ -4,9 +4,9 @@ while BaseModel.schema_json will return a JSON string representation of that dic
 """
 
 from typing import List, Optional
+from uuid import UUID
 
 from pydantic import BaseModel
-from uuid import UUID
 
 
 # Shared properties
@@ -14,12 +14,15 @@ class SwipeCardBase(BaseModel):
     member_id: str = None
     room_uuid: UUID
 
+
 class SwipeCardCreate(SwipeCardBase):
     recommended_member_id: str
+
 
 # Properties to receive via API on update
 class SwipeCardUpdate(SwipeCardBase):
     pass
+
 
 class SwipeCardInDBBase(SwipeCardBase):
     recommended_member_id: str
@@ -47,19 +50,24 @@ class SwipeCardInDB(SwipeCardInDBBase):
 class SwipeCardAskRecommend(SwipeCardBase):
     pass
 
+
 class SwipeCardRecommend(SwipeCardBase):
     recommended_member_id: str
 
+
 class SwipeCardPreference(SwipeCardBase):
-    target_member_id: str=None
-    is_liked: bool=True
-    is_hated: bool=False
+    target_member_id: str = None
+    is_liked: bool = True
+    is_hated: bool = False
 
     class Config:
         orm_mode = True
+
+
 class SwipeCardMessage(BaseModel):
     message: str
     data: Optional[List[SwipeCard]] = None
+
 
 class SwipeCardPreferenceMessage(BaseModel):
     message: str

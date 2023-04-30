@@ -7,8 +7,8 @@ from app.routers.api_v1 import (
     matching_room,
     notification,
     search,
+    swipe_card,
     user,
-    swipe_card
 )
 
 api_router = APIRouter()

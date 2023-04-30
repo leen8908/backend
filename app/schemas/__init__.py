@@ -18,14 +18,14 @@ from .notification import (
 from .sso_login import SSOLogin, SSOLoginMessage
 from .swipe_card import (
     SwipeCard,
+    SwipeCardAskRecommend,
     SwipeCardCreate,
-    SwipeCardUpdate,
     SwipeCardInDB,
     SwipeCardMessage,
     SwipeCardPreference,
-    SwipeCardAskRecommend,
+    SwipeCardPreferenceMessage,
     SwipeCardRecommend,
-    SwipeCardPreferenceMessage
+    SwipeCardUpdate,
 )
 from .token import Token, TokenPayload
 from .user import (

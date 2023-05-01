@@ -40,10 +40,10 @@ class RandomRecommendation(RecommendationStrategy):
         random_feature_prepare = RandomFeaturePreparer()
         random_feature = random_feature_prepare.prepare(member_id, room_uuid, db)
         candidate_member_id_list = random_feature.candidate_member_id_list
-        # Recommend Algorithm: randomly get 5 members
+        # Recommend Algorithm: randomly get all candidate members
         if len(candidate_member_id_list) != 0:
             random.shuffle(candidate_member_id_list)
-            return candidate_member_id_list[:5]
+            return candidate_member_id_list
 
         else:
             return []

@@ -1,15 +1,17 @@
+import os
+import sys
 from typing import Any
 
-
-import os, sys
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 import loguru
+
 loguru.logger.info(sys.path)
-from swipecard import crud
-from swipecard.database import SessionLocal
 from fastapi import Depends, FastAPI
 from fastapi.encoders import jsonable_encoder
+from sqlalchemy.orm import Session
+from swipecard import crud
+from swipecard.database import SessionLocal
 from swipecard.recommendation_context import RecommendationContext
 from swipecard.recommendation_strategy import RandomRecommendation
 from swipecard.schemas import (
@@ -18,7 +20,6 @@ from swipecard.schemas import (
     SwipeCardPreference,
     SwipeCardPreferenceMessage,
 )
-from sqlalchemy.orm import Session
 
 app = FastAPI()
 

@@ -38,6 +38,12 @@ jobs:
         echo "Start creating .env file"
         echo "${{ secrets.ENV_FILE }}" > .env
         echo $PWD
+    - name: Create swipecard microservice env file
+      working-directory: ./microservices/swipecard
+      run: |
+        echo "Start creating swipecard microservice .env file"
+        echo "${{ secrets.ENV_FILE }}" > .env
+        echo $PWD
     - name: Run test
       working-directory: ./
       run: |

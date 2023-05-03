@@ -1,11 +1,12 @@
+# from app.schemas import SwipeCardRecommend
+import os
+import sys
 from typing import List
 
-# from app.schemas import SwipeCardRecommend
-import os, sys
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
-from swipecard.recommendation_strategy import RecommendationStrategy
 from sqlalchemy.orm import Session
+from swipecard.recommendation_strategy import RecommendationStrategy
 
 
 class RecommendationContext:

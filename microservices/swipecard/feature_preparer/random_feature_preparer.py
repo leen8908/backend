@@ -1,10 +1,11 @@
-import os, sys
+import os
+import sys
+
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
-from swipecard.recommend_feature import RandomFeature
 from sqlalchemy.orm import Session
-
 from swipecard.feature_preparer.base_preparer import BasePreparer
+from swipecard.recommend_feature import RandomFeature
 
 
 class RandomFeaturePreparer(BasePreparer):

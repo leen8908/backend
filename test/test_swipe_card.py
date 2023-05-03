@@ -3,6 +3,7 @@ import random
 import string
 from datetime import timedelta
 
+import loguru
 import pytest
 import sqlalchemy as sa
 from fastapi.encoders import jsonable_encoder
@@ -129,12 +130,14 @@ def test_save_preference_who_has_logged_in(get_server_api, session, test_client)
     room_uuid = jsonable_encoder(matching_room)["room_uuid"]
 
     mr_member_in1 = MR_Member(
+        member_id=1,
         user_uuid=user_uuid1,
         room_uuid=room_uuid,
     )
     session.add(mr_member_in1)
     session.commit()
     mr_member_in2 = MR_Member(
+        member_id=2,
         user_uuid=user_uuid2,
         room_uuid=room_uuid,
     )
@@ -148,6 +151,7 @@ def test_save_preference_who_has_logged_in(get_server_api, session, test_client)
         "is_like": True,
         "is_hated": False,
     }
+    loguru.logger.info(jsonable_encoder(session.query(MR_Member).all()))
 
     response = test_client.post(
         f"{get_server_api}{settings.API_V1_STR}/swipe-card/swipe",

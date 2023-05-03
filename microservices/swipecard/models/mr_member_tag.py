@@ -1,9 +1,11 @@
-import os, sys
+import os
+import sys
+
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
-from swipecard.database import Base
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.dialects.postgresql import UUID
+from swipecard.database import Base
 
 
 class MR_Member_Tag(Base):

@@ -1,16 +1,17 @@
-import random
-from abc import ABC, abstractmethod
-from typing import List
-
 # from .prepare_recommendation import PrepareRandomRecommend, PrepareHotguyRecommend
 # from .adapter import RandomAdapter
 # from .recommend_feature_factory import RandomFeatureFactory, HotPersonFeatureFactory
 # from .recommend_feature_prepare import RecommendFeaturePreparer
-import os, sys
+import os
+import random
+import sys
+from abc import ABC, abstractmethod
+from typing import List
+
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
-from swipecard.feature_preparer.random_feature_preparer import RandomFeaturePreparer
 from sqlalchemy.orm import Session
+from swipecard.feature_preparer.random_feature_preparer import RandomFeaturePreparer
 
 
 class RecommendationStrategy(ABC):

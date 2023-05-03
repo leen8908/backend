@@ -1,6 +1,8 @@
 import datetime
+import os
 import random
 import string
+import sys
 from datetime import timedelta
 
 import pytest
@@ -10,22 +12,23 @@ from fastapi.testclient import TestClient
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils.functions import create_database, database_exists
 
-import os, sys
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
+from swipecard.core.config import settings
+from swipecard.swipe import app  # Flask instance of the API
+from swipecard.swipe import get_db
+
 from app import crud, schemas
 from app.core import security
-from swipecard.core.config import settings
+
 # from swipecard.database import Base
 # from swipecard.swipe import app  # Flask instance of the API
 # from swipecard.models.mr_liked_hated_member import MR_Liked_Hated_Member
 # from swipecard.models.mr_member import MR_Member
 # from swipecard.swipe import get_db
 from app.database.base_class import Base
-from swipecard.swipe import app  # Flask instance of the API
 from app.models.mr_liked_hated_member import MR_Liked_Hated_Member
 from app.models.mr_member import MR_Member
-from swipecard.swipe import get_db
 
 SQLALCHEMY_DATABASE_URL = f"postgresql://{settings.POSTGRES_USER}:{settings.POSTGRES_PASSWORD}@\
 {settings.POSTGRES_HOST}:{settings.DATABASE_PORT}/test.db"
@@ -164,7 +167,6 @@ def test_save_preference(get_server_api, session, test_client):
 
     assert response.status_code == 200
     assert response.json()["message"] == "success"
-
 
 
 def test_get_recommendation(get_server_api, session, test_client):

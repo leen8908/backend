@@ -1,12 +1,13 @@
+import os
+import sys
 import uuid
 
-import os, sys
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
-from swipecard.database import Base
 from sqlalchemy import Boolean, Column, DateTime, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
+from swipecard.database import Base
 
 
 class User(Base):

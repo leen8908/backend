@@ -1,9 +1,14 @@
+import os
+import sys
 import uuid
 
 from sqlalchemy import Column, ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID
 
-from app.database.base_class import Base
+# from app.database.base_class import Base
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(SCRIPT_DIR))
+from swipecard.database import Base
 
 
 class MatchingEvent(Base):

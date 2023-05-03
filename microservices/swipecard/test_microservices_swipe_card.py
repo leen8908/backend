@@ -3,7 +3,6 @@ import os
 import random
 import string
 import sys
-from datetime import timedelta
 
 import pytest
 import sqlalchemy as sa
@@ -19,16 +18,16 @@ from swipecard.swipe import app  # Flask instance of the API
 from swipecard.swipe import get_db
 
 from app import crud, schemas
-from app.core import security
-
-# from swipecard.database import Base
-# from swipecard.swipe import app  # Flask instance of the API
-# from swipecard.models.mr_liked_hated_member import MR_Liked_Hated_Member
-# from swipecard.models.mr_member import MR_Member
-# from swipecard.swipe import get_db
 from app.database.base_class import Base
 from app.models.mr_liked_hated_member import MR_Liked_Hated_Member
 from app.models.mr_member import MR_Member
+
+# from app.core import security
+# from swipecard import crud, schemas
+
+# from swipecard.database import Base
+# from swipecard.swipe import app  # Flask instance of the API
+
 
 SQLALCHEMY_DATABASE_URL = f"postgresql://{settings.POSTGRES_USER}:{settings.POSTGRES_PASSWORD}@\
 {settings.POSTGRES_HOST}:{settings.DATABASE_PORT}/test.db"
@@ -96,17 +95,17 @@ def random_lower_string():
     return "".join(random.choices(string.ascii_lowercase, k=32))
 
 
-def get_user_authentication_headers(session, email):
-    email = email
+# def get_user_authentication_headers(session, email):
+#     email = email
 
-    user = crud.user.get_by_email(db=session, email=email)
-    user = jsonable_encoder(user)
-    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = security.create_access_token(
-        user["user_uuid"], expires_delta=access_token_expires
-    )
-    headers = {"Authorization": f"Bearer {access_token}"}
-    return headers
+#     user = crud.user.get_by_email(db=session, email=email)
+#     user = jsonable_encoder(user)
+#     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+#     access_token = security.create_access_token(
+#         user["user_uuid"], expires_delta=access_token_expires
+#     )
+#     headers = {"Authorization": f"Bearer {access_token}"}
+#     return headers
 
 
 # Test

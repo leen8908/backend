@@ -4,9 +4,7 @@ from typing import Any
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
-import loguru
 
-loguru.logger.info(sys.path)
 from fastapi import Depends, FastAPI
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session

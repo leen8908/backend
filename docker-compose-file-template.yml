@@ -47,6 +47,7 @@ services:
 
     swipecard:
         container_name: swipecard
+        image: swipecard:latest
         build:
             context: ./backend/microservices/swipecard
         ports:

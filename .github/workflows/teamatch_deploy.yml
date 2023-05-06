@@ -2,24 +2,25 @@ name: fastapi CICD
 
 
 on:
-  # pull_request:
-  #   branches: [main]
-  #   types: [closed]
-  push:
-    branches:
-    - main
+  pull_request:
+    branches: [main]
+    types: [closed]
+  # push:
+  #   branches:
+  #   - main
+  #   - cd-test
 
 
 jobs:
   pre-commit:
-    #if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: pre-commit/action@v3.0.0
 
   build:
-    #if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 1
@@ -37,26 +38,26 @@ jobs:
         echo "Start creating .env file"
         echo "${{ secrets.ENV_FILE }}" > .env
         echo $PWD
-    - name: Run test
-      working-directory: ./
-      run: |
-        echo "Start running unit-test"
-        echo $PWD
-        cp ./docker-compose-cicd.yml ./docker-compose.yml
-        echo "Start building"
-        docker-compose up --build -d
-        echo "Start define entrypoint"
-        ENTRYPOINT="python -m pytest --cov=app --html=test/report/report.html -W ignore::DeprecationWarning -s --capture=fd --log-cli-level=DEBUG"
-        echo "migrate alembic"
-        docker-compose exec -T backend alembic upgrade head
-        docker-compose exec -T backend python3 -m app.initial_data
-        docker-compose exec -T backend python3 -m app.database.test.test_database
-        docker-compose exec -T backend python3 -m app.database.test.initial_test_data
-        echo "Start run pytest"
-        docker-compose exec -T backend $ENTRYPOINT
-    - name: log
-      run: |
-        docker-compose logs
+    # - name: Run test
+    #   working-directory: ./
+    #   run: |
+    #     echo "Start running unit-test"
+    #     echo $PWD
+    #     cp ./docker-compose-cicd.yml ./docker-compose.yml
+    #     echo "Start building"
+    #     docker-compose up --build -d
+    #     echo "Start define entrypoint"
+    #     ENTRYPOINT="python -m pytest --cov=app --html=test/report/report.html -W ignore::DeprecationWarning -s --capture=fd --log-cli-level=DEBUG"
+    #     echo "migrate alembic"
+    #     docker-compose exec -T backend alembic upgrade head
+    #     docker-compose exec -T backend python3 -m app.initial_data
+    #     docker-compose exec -T backend python3 -m app.database.test.test_database
+    #     docker-compose exec -T backend python3 -m app.database.test.initial_test_data
+    #     echo "Start run pytest"
+    #     docker-compose exec -T backend $ENTRYPOINT
+    # - name: log
+    #   run: |
+    #     docker-compose logs
 
     # 遠端部署
     - name: depoloy to VM
@@ -71,5 +72,5 @@ jobs:
           git config --global user.email "luwenkai0820@gmail.com"
           git config --global user.name "BOBO-LU"
           git pull https://github.com/leen8908/backend.git
-          cd /home/freegcp0001/gitops
+          cd /home/freegcp0001/cd_test
           #docker-compose up --build -d

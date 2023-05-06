@@ -69,8 +69,8 @@ jobs:
         script: |
 
           cd /home/freegcp0001/cd_test/backend
-          git config --global user.email "luwenkai0820@gmail.com"
-          git config --global user.name "BOBO-LU"
+          git config --global user.email "eanli2000@gmail.com"
+          git config --global user.name "leen8908"
           git pull https://github.com/leen8908/backend.git
           cd /home/freegcp0001/cd_test
           #docker-compose up --build -d

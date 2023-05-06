@@ -1,14 +1,12 @@
-import os
-import sys
-
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.dirname(SCRIPT_DIR))
+# SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+# sys.path.append(os.path.dirname(SCRIPT_DIR))
 from sqlalchemy.orm import Session
-from swipecard.models.mr_liked_hated_member import MR_Liked_Hated_Member
-from swipecard.models.mr_member import MR_Member
-from swipecard.models.mr_member_tag import MR_Member_Tag
-from swipecard.models.user import User
-from swipecard.schemas import SwipeCardPreference
+
+from microservices.swipecard.models.mr_liked_hated_member import MR_Liked_Hated_Member
+from microservices.swipecard.models.mr_member import MR_Member
+from microservices.swipecard.models.mr_member_tag import MR_Member_Tag
+from microservices.swipecard.models.user import User
+from microservices.swipecard.schemas import SwipeCardPreference
 
 
 class CRUDSwipeCard:

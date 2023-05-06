@@ -1,23 +1,23 @@
-import os
-import sys
 from typing import Any
-
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.dirname(SCRIPT_DIR))
 
 from fastapi import Depends, FastAPI
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
-from swipecard import crud
-from swipecard.database import SessionLocal
-from swipecard.recommendation_context import RecommendationContext
-from swipecard.recommendation_strategy import RandomRecommendation
-from swipecard.schemas import (
+
+from microservices.swipecard import crud
+from microservices.swipecard.database import SessionLocal
+from microservices.swipecard.recommendation_context import RecommendationContext
+from microservices.swipecard.recommendation_strategy import RandomRecommendation
+from microservices.swipecard.schemas import (
     SwipeCardAskRecommend,
     SwipeCardMessage,
     SwipeCardPreference,
     SwipeCardPreferenceMessage,
 )
+
+# SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+# sys.path.append(os.path.dirname(SCRIPT_DIR))
+
 
 app = FastAPI()
 

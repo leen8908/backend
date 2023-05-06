@@ -2,16 +2,17 @@
 # from .adapter import RandomAdapter
 # from .recommend_feature_factory import RandomFeatureFactory, HotPersonFeatureFactory
 # from .recommend_feature_prepare import RecommendFeaturePreparer
-import os
 import random
-import sys
 from abc import ABC, abstractmethod
 from typing import List
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.dirname(SCRIPT_DIR))
+# SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+# sys.path.append(os.path.dirname(SCRIPT_DIR))
 from sqlalchemy.orm import Session
-from swipecard.feature_preparer.random_feature_preparer import RandomFeaturePreparer
+
+from microservices.swipecard.feature_preparer.random_feature_preparer import (
+    RandomFeaturePreparer,
+)
 
 
 class RecommendationStrategy(ABC):
@@ -33,12 +34,6 @@ class RandomRecommendation(RecommendationStrategy):
         """
         implement random recommendation
         """
-        # get candidate member_id list:
-        # prepare_random_recommend = PrepareRandomRecommend()
-        # prepare_random_recommend__adapter = RandomAdapter(prepare_random_recommend)
-        # candidate_member_id_list = prepare_random_recommend__adapter.prepare(member_id, room_uuid)
-        # random_feature_preparer = RecommendFeaturePreparer(RandomFeatureFactory())
-        # candidate_member_id_list = random_feature_preparer.feature_order(member_id, room_uuid, db) #回傳一個 member_id list
 
         random_feature_prepare = RandomFeaturePreparer()
         random_feature = random_feature_prepare.prepare(member_id, room_uuid, db)

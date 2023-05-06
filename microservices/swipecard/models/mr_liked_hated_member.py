@@ -1,11 +1,9 @@
-import os
-import sys
-
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.dirname(SCRIPT_DIR))
+# SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+# sys.path.append(os.path.dirname(SCRIPT_DIR))
 from sqlalchemy import Boolean, Column, ForeignKey, Integer
 from sqlalchemy.dialects.postgresql import UUID
-from swipecard.database import Base
+
+from microservices.swipecard.database import Base
 
 from .matching_room import MatchingRoom
 from .mr_member import MR_Member

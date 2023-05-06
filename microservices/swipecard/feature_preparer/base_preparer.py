@@ -1,13 +1,12 @@
-import os
-import sys
 from abc import ABC, abstractmethod
 from typing import Any, List
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.dirname(SCRIPT_DIR))
+# SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+# sys.path.append(os.path.dirname(SCRIPT_DIR))
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
-from swipecard import crud
+
+from microservices.swipecard import crud
 
 
 class BasePreparer(ABC):

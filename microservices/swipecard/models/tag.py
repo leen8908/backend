@@ -1,14 +1,12 @@
 # from app.database.base_class import Base
-import os
-import sys
 import uuid
 
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.dialects.postgresql import UUID
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.dirname(SCRIPT_DIR))
-from swipecard.database import Base
+# SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+# sys.path.append(os.path.dirname(SCRIPT_DIR))
+from microservices.swipecard.database import Base
 
 
 class Tag(Base):

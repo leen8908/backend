@@ -44,16 +44,15 @@ services:
     swipecard:
         container_name: swipecard
         build:
-            context: ./microservices/swipecard
+            context: ./backend/microservices/swipecard
         ports:
             - "8002:8002"
         volumes:
-            - ./microservices/swipecard:/swipecard
+            - ./backend:/backend
         restart: always
         tty: true
         depends_on:
             - postgres
-            - backend
         networks:
             - teamatch-network
 
